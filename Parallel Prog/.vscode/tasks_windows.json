@@ -1,0 +1,32 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cppbuild",
+			"label": "gcc windows",
+			"command": "C:/programs/MSYS2/mingw64/bin/gcc",
+			"args": [			
+				"-fopenmp", 
+				"-fdiagnostics-color=always",
+				"-g",
+				"${file}", 
+				"-o",
+				"${fileDirname}\\${fileBasenameNoExtension}.exe"
+			],
+			"options": {
+				"cwd": "C:/programs/MSYS2/mingw64/bin"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build",
+			"detail": "компилятор: C:/programs/MSYS2/mingw64/bin/gcc",
+			"presentation": {
+				"reveal": "never"
+			},
+			"runOptions": {
+				"cwd": "${fileDirname}" 
+			}
+		}
+	]
+}
