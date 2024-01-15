@@ -1,5 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <omp.h>
+#include <time.h>
+#include <json/json.h>
+#include <fstream>
+
+
 double shellSort(int* array, int const length)
 {
     for (int s  = length /2; s > 0; s/=2) {

@@ -5,22 +5,67 @@
 #include <json/json.h>
 #include <fstream>
 
-double process_array(int threads, int* array, int count, int const target)
+
+
+int* g_default(int count){
+    int* array = (int*)malloc(count*sizeof(int));
+    for(int i=0; i<count; i++) { array[i] = rand(); }
+    return array;
+}
+
+int* g_without_target(int count, int element){
+    int* array = (int*)malloc(count*sizeof(int));
+    for(int i=0; i<count; i++) { 
+        array[i] = rand(); 
+        if (array[i] == element)
+            i--;
+    }
+    return array;
+}
+
+int* g_target_is_first(int count, int element){
+    int* array = g_without_target(count, element);
+    array[0] = element;
+    return array;
+}
+
+int* g_target_is_last(int count, int element){
+    int* array = g_without_target(count, element);
+    array[count] = element;
+    return array;
+}
+
+int* g_target_in_middle(int count, int element){
+    int* array = g_without_target(count, element);
+    array[count/2] = element;
+    return array;
+}
+
+
+int* g_target_everywhere(int count, int element){
+    int* array = (int*)malloc(count*sizeof(int));
+    for(int i=0; i<count; i++) { array[i] = element; }
+    return array;
+}
+
+
+
+double process_array(int threads, int* array, int count, int const target, int* index)
 {
-    int  max   = -1;                ///< The maximal element
-    int index = -1;
-    
+    *index = -1;
     double start = omp_get_wtime();
     /* Find the maximal element */
-    #pragma omp parallel num_threads(threads) shared(array, count, target, index) reduction(max: max) default(none)
+    #pragma omp parallel num_threads(threads) shared(array, count, target, index) default(none)
     {
         #pragma omp for
         for(int i=0; i<count; i++)
         {
+            if(*index != -1)
+                i = count;
             if(array[i] == target)
             {
-                index = i;
-                i = count-1;
+                #pragma omp critical
+                *index = i;
             }
         }
         //printf("Found occurence of %d at index %d;\n", target, index);
@@ -34,8 +79,10 @@ int main(int argc, char** argv)
 {
     const int count = 47483647;     ///< Number of array elements
     int max_threads = 16;         ///< Number of parallel threads to use
+    int target = 16;
     const int random_seed = 920215; ///< RNG seed
     int tests_number = 10;
+    int index;
     int* array;
     int** matrix= (int**)malloc(tests_number*sizeof(int*));
     Json::Value root;
@@ -46,27 +93,24 @@ int main(int argc, char** argv)
     printf("Threads number: %d\n======\n", omp_get_num_procs());
     srand(random_seed);
     for(int i = 0; i<tests_number; i++){
-        /* Initialize the RNG */
-                /* Generate the random array */
-        array = (int*)malloc(count*sizeof(int));
-        for(int i=0; i<count; i++) { array[i] = rand(); }
+        array = g_target_in_middle(count, target);
         matrix[i] = array;
     }
 
 
-    int threads = max_threads;
-    while(threads > 0)
+    int threads = 1;
+    while(threads <= max_threads)
     {   
         double sum = 0;
         for(int i = 0; i <tests_number; i++){
-            double t = process_array(threads, matrix[i], count, 16);
+            double t = process_array(threads, matrix[i], count, target, &index);
             sum+=t;
         }
         double averageTime = sum / tests_number;
-        root[std::to_string(threads)] = averageTime;
+        root[std::to_string(threads)] = averageTime;    //save result in json
     
         printf("%d threads: %fs\n", threads, averageTime);
-        threads--;
+        threads++;
     }
     std::ofstream outFile("results.json");
     outFile << root;

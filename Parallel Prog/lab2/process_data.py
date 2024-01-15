@@ -1,6 +1,7 @@
 import json
 import csv
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 
 # Загрузите данные из файла JSON
 with open("results.json", "r") as file:
@@ -35,42 +36,44 @@ with open(csv_filename, mode='w', newline='') as csv_file:
     for p, t, s, e in zip(processors, times, speedup, efficiency):
         writer.writerow([p, t, s, e])
 
-# Постройте графики
-plt.figure(figsize=(15, 5))
+# Создаем объект gridspec с разными отношениями размеров ячеек
+fig = plt.figure(figsize=(12, 15))
+gs = GridSpec(2, 2, width_ratios=[1, 1], height_ratios=[3, 2])
+
 
 # График времени выполнения с теоретическими значениями
-plt.subplot(1, 3, 1)
-plt.plot(processors_int, times, '-o', color="blue", label='Practical')
-plt.plot(processors_int, T_theoretical, '--', color="orange", label='Theoretical')
-plt.xlabel('Number of Processors')
-plt.ylabel('Time (seconds)')
-plt.title('Execution Time vs Number of Processors')
-plt.legend()
-plt.grid(True)
+ax1 = plt.subplot(gs[0, :])
+ax1.plot(processors_int, times, '-o', color="blue", label='Practical')
+ax1.plot(processors_int, T_theoretical, '--', color="orange", label='Theoretical')
+ax1.set_xlabel('Number of Processors')
+ax1.set_ylabel('Time (seconds)')
+ax1.set_title('Execution Time vs Number of Processors')
+ax1.legend()
+ax1.grid(True)
 
 # График ускорения с теоретическими значениями
-plt.subplot(1, 3, 2)
-plt.plot(processors_int, speedup, '-o', color="green", label='Practical')
-plt.plot(processors_int, S_theoretical, '--', color="orange", label='Theoretical')
-plt.xlabel('Number of Processors')
-plt.ylabel('Speedup')
-plt.title('Speedup vs Number of Processors')
-plt.legend()
-plt.grid(True)
+ax2 = plt.subplot(gs[2])
+ax2.plot(processors_int, speedup, '-o', color="green", label='Practical')
+ax2.plot(processors_int, S_theoretical, '--', color="orange", label='Theoretical')
+ax2.set_xlabel('Number of Processors')
+ax2.set_ylabel('Speedup')
+ax2.set_title('Speedup vs Number of Processors')
+ax2.legend()
+ax2.grid(True)
 
 # График эффективности с теоретическими значениями
-plt.subplot(1, 3, 3)
-plt.plot(processors_int, efficiency, '-o', color="red", label='Practical')
-plt.plot(processors_int, E_theoretical, '--', color="orange", label='Theoretical')
-plt.xlabel('Number of Processors')
-plt.ylabel('Efficiency')
-plt.title('Efficiency vs Number of Processors')
-plt.legend()
-plt.grid(True)
+ax3 = plt.subplot(gs[3])
+ax3.plot(processors_int, efficiency, '-o', color="red", label='Practical')
+ax3.plot(processors_int, E_theoretical, '--', color="orange", label='Theoretical')
+ax3.set_xlabel('Number of Processors')
+ax3.set_ylabel('Efficiency')
+ax3.set_title('Efficiency vs Number of Processors')
+ax3.legend()
+ax3.grid(True)
 
-# Сохраните все графики в одном файле
+# Сохранение в файл
 plt.tight_layout()
 plt.savefig('performance_graphs.png')
 
 # Покажите графики
-plt.show()
+#plt.show()
