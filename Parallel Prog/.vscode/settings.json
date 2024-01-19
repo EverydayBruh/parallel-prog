@@ -3,7 +3,8 @@
         "json.h": "c",
         "stdio.h": "c",
         "functional": "c",
-        "algorithm": "c"
+        "algorithm": "c",
+        "array": "c"
     },
     "cmake.configureOnOpen": false
 }

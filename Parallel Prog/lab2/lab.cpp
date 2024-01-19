@@ -37,7 +37,7 @@ int* g_target_is_last(int count, int element){
 
 int* g_target_in_middle(int count, int element){
     int* array = g_without_target(count, element);
-    array[count/2] = element;
+    array[count/2+2] = element;
     return array;
 }
 
@@ -93,7 +93,7 @@ int main(int argc, char** argv)
     printf("Threads number: %d\n======\n", omp_get_num_procs());
     srand(random_seed);
     for(int i = 0; i<tests_number; i++){
-        array = g_target_in_middle(count, target);
+        array = g_default(count);
         matrix[i] = array;
     }
 

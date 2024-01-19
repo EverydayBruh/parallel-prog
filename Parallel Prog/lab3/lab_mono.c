@@ -1,22 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
-double shellSort(int* array, int const length)
-{
-    for (int s  = length /2; s > 0; s/=2) {
-        for(int i = 0; i < s; i++) {
-            for (int j = i + s; j < length; j+=s) {
-                int key = array[j];
-                int k = j - s;
-                while(k >= 0 && array[k] > key) {
-                    array[k + s] = array[k];
-                    k -= s;
+    double shellSort(int* array, int const length)
+    {
+        for (int s  = length /2; s > 0; s/=2) {
+            for(int i = 0; i < s; i++) {
+                for (int j = i + s; j < length; j+=s) {
+                    int key = array[j];
+                    int k = j - s;
+                    while(k >= 0 && array[k] > key) {
+                        array[k + s] = array[k];
+                        k -= s;
+                    }
+                    array[k + s] = key;
                 }
-                array[k + s] = key;
             }
         }
+        return 0;
     }
-    return 0;
-}
 
 void printArray(int* array, int const length){
     printf("\n\n");
