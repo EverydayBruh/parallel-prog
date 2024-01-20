@@ -7,14 +7,9 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/usr/include/**",
-                "/usr/include/jsoncpp/**",
-                "/usr/lib/x86_64-linux-gnu/openmpi/include"
+                "/usr/include/jsoncpp/**"
             ],
-            "defines": [],
-            "compilerPath": "/usr/bin/mpicc",
-            "cStandard": "c11",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "clang-x64"
+            "defines": []
         }
     ],
     "version": 4

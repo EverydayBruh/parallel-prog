@@ -54,7 +54,7 @@ int* copy_array(int* array, int const count){
 
 int main(int argc, char** argv)
 {
-    const int count = 1000000;     ///< Number of array elements
+    const int count = 1e7;     ///< Number of array elements
     int max_threads = 16;         ///< Number of parallel threads to use
     int target = 16;
     const int random_seed = 920215; ///< RNG seed
